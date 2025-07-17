@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>테트리스 게임</title>
+    <title>테트리스 게임 (실시간 리더보드)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
+
+        <div class="leaderboard" id="leaderboardPanel">
+            <h3>🏆 실시간 랭킹 Top 15</h3>
+            <ol id="leaderboardList"></ol>
+        </div>
+
         <div class="game-board">
             <canvas id="gameCanvas" width="300" height="600"></canvas>
             <div class="game-over" id="gameOver">
@@ -32,12 +38,6 @@
                     <span id="lines">0</span>
                 </div>
             </div>
-
-            <div class="leaderboard" id="leaderboardPanel">
-                <h3>🏆 실시간 랭킹 Top 5</h3>
-                <ol id="leaderboardList"></ol>
-                <a href="leaderboard.html" class="view-all-btn">전체 랭킹 보기</a>
-            </div>
             
             <div class="next-piece">
                 <h3>다음 블록</h3>
@@ -60,7 +60,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
-        // 이 부분에 본인의 Firebase 설정 코드를 붙여넣으세요.
+        // 본인의 Firebase 설정 코드를 붙여넣으세요.
         const firebaseConfig = {
             apiKey: "AIzaSyDCS1EfQ-DoSLM4pAjdlguMfiRkcH34u8w",
             authDomain: "tetris-list.firebaseapp.com",
@@ -70,12 +70,12 @@
             appId: "1:883824472279:web:16c3ab67bf1b323ef1c092",
             measurementId: "G-8L4NH0F8S1"
         };
-        
+
         // Firebase 초기화
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- 이 아래의 게임 로직 스크립트는 기존과 동일합니다 ---
+        // --- 이 아래의 게임 로직 스크립트는 변경사항 없습니다 ---
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const nextCanvas = document.getElementById('nextCanvas');
@@ -239,7 +239,7 @@
             clearLines();
             currentPiece = nextPiece;
             nextPiece = createPiece();
-            updateGhostPiece();
+            updateGhostPiece(); 
             if (!isValidMove(currentPiece, 0, 0)) {
                 gameOver();
             }
@@ -271,6 +271,7 @@
             gameRunning = false;
             document.getElementById('finalScore').textContent = score;
             document.getElementById('gameOver').style.display = 'block';
+
             const name = prompt("게임 오버! 랭킹에 등록할 이름을 입력하세요:", "플레이어");
             if (name && score > 0) {
                 await saveScore(name, score);
@@ -284,29 +285,34 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 console.log("점수 저장 성공!");
-                await displayLeaderboard();
+                await displayLeaderboard(); 
             } catch (error) {
                 console.error("점수 저장 실패: ", error);
             }
         }
         async function displayLeaderboard() {
             const list = document.getElementById('leaderboardList');
-            list.innerHTML = "<li>불러오는 중...</li>";
+            list.innerHTML = "<li>불러오는 중...</li>"; 
+
             try {
                 const snapshot = await db.collection("scores")
                     .orderBy("score", "desc")
-                    .limit(5)
+                    .limit(15) 
                     .get();
-                list.innerHTML = "";
+                
+                list.innerHTML = ""; 
                 if (snapshot.empty) {
                     list.innerHTML = "<li>등록된 점수가 없습니다.</li>";
                     return;
                 }
+                
+                let rank = 1;
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const entry = document.createElement('li');
-                    entry.innerHTML = `<span>${data.name}</span> <span>${data.score}</span>`;
+                    entry.innerHTML = `<span class="rank-name">${rank}. ${data.name}</span> <span class="score-val">${data.score.toLocaleString()}</span>`;
                     list.appendChild(entry);
+                    rank++;
                 });
             } catch (error) {
                 console.error("리더보드 로딩 실패: ", error);
@@ -326,7 +332,7 @@
             initBoard();
             currentPiece = createPiece();
             nextPiece = createPiece();
-            updateGhostPiece();
+            updateGhostPiece(); 
             gameRunning = true;
             paused = false;
             dropTime = Date.now();
@@ -366,14 +372,14 @@
             }
             if (!gameRunning) return;
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-                e.preventDefault();
+                e.preventDefault(); 
             }
             if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
                 paused = !paused;
-                if (!paused) { dropTime = Date.now(); }
+                if (!paused) { dropTime = Date.now(); } 
                 return;
             }
-            if (paused) return;
+            if(paused) return;
             switch (e.key) {
                 case 'ArrowLeft':
                     if (isValidMove(currentPiece, -1, 0)) {
@@ -415,6 +421,7 @@
                     return;
             }
         });
+        
         startGame();
         displayLeaderboard();
     </script>

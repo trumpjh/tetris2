@@ -1,4 +1,5 @@
 /* style.css */
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -7,10 +8,8 @@ body {
     min-height: 100vh;
     margin: 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
 }
 
-/* --- Game Page Styles --- */
 .game-container {
     display: flex;
     gap: 20px;
@@ -26,13 +25,14 @@ body {
     position: relative;
 }
 
-canvas#gameCanvas {
+canvas {
     border: 2px solid #fff;
     background: #000;
     border-radius: 5px;
 }
 
 .info-panel {
+    color: white;
     min-width: 200px;
 }
 
@@ -44,10 +44,55 @@ canvas#gameCanvas {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.leaderboard h3 { margin-top: 0; }
-.leaderboard ol { padding-left: 20px; margin: 0; }
-.leaderboard li { margin: 5px 0; display: flex; justify-content: space-between; }
-.leaderboard li span:first-child { font-weight: bold; }
+.leaderboard {
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.leaderboard h3 { 
+    margin-top: 0; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+
+.leaderboard ol { 
+    padding-left: 0;
+    margin: 0; 
+    list-style: none;
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+.leaderboard ol::-webkit-scrollbar {
+    width: 8px;
+}
+
+.leaderboard ol::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+.leaderboard ol::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 4px;
+}
+
+.leaderboard li { 
+    margin: 8px 5px; 
+    display: flex; 
+    justify-content: space-between;
+    font-size: 14px;
+    color: white;
+}
+
+.leaderboard li .rank-name {
+    font-weight: bold;
+}
+
+.leaderboard li .score-val {
+    color: #f0f000;
+}
 
 .score-item {
     display: flex;
@@ -57,6 +102,7 @@ canvas#gameCanvas {
 }
 
 .next-piece { text-align: center; }
+
 .next-canvas {
     border: 1px solid #fff;
     background: #000;
@@ -65,6 +111,7 @@ canvas#gameCanvas {
 }
 
 .controls h3 { margin-top: 0; color: #fff; }
+
 .controls p { margin: 5px 0; color: #ccc; font-size: 14px; }
 
 .game-over {
@@ -89,80 +136,6 @@ canvas#gameCanvas {
     cursor: pointer;
     font-size: 16px;
     margin-top: 15px;
-    text-decoration: none;
 }
 
 .restart-btn:hover { background: #45a049; }
-
-.view-all-btn {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background 0.3s;
-}
-.view-all-btn:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-/* --- Full Leaderboard Page Styles --- */
-.leaderboard-container {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 90%;
-    max-width: 600px;
-    text-align: center;
-}
-
-.leaderboard-container h1 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 2em;
-}
-
-.leaderboard-container ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-}
-
-.leaderboard-container li {
-    background: rgba(0, 0, 0, 0.2);
-    margin-bottom: 8px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1em;
-}
-
-.leaderboard-container .rank {
-    font-weight: bold;
-    min-width: 40px;
-    font-style: italic;
-    color: #ddd;
-}
-
-.leaderboard-container .name {
-    flex-grow: 1;
-    margin-left: 15px;
-}
-
-.leaderboard-container .score {
-    font-weight: bold;
-    color: #f0f000;
-}
-
-.back-btn {
-    margin-top: 25px;
-}
