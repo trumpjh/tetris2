@@ -60,7 +60,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
-        // TODO: 이 부분에 1단계에서 복사한 본인의 Firebase 설정 코드를 붙여넣으세요.
+        // 이 부분에 본인의 Firebase 설정 코드를 붙여넣으세요.
         const firebaseConfig = {
             apiKey: "AIzaSyDCS1EfQ-DoSLM4pAjdlguMfiRkcH34u8w",
             authDomain: "tetris-list.firebaseapp.com",
@@ -70,23 +70,19 @@
             appId: "1:883824472279:web:16c3ab67bf1b323ef1c092",
             measurementId: "G-8L4NH0F8S1"
         };
-
-        // 이 아래의 JavaScript 코드는 기존 코드와 동일합니다.
-        // (변경된 부분 없음)
-
+        
         // Firebase 초기화
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // --- 이 아래의 게임 로직 스크립트는 기존과 동일합니다 ---
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const nextCanvas = document.getElementById('nextCanvas');
         const nextCtx = nextCanvas.getContext('2d');
-        
         const BOARD_WIDTH = 10;
         const BOARD_HEIGHT = 20;
         const BLOCK_SIZE = 30;
-        
         const TETROMINOS = {
             I: { shape: [[1, 1, 1, 1]], color: '#00f0f0' },
             O: { shape: [[1, 1], [1, 1]], color: '#f0f000' },
@@ -96,7 +92,6 @@
             J: { shape: [[1, 0, 0], [1, 1, 1]], color: '#0000f0' },
             L: { shape: [[0, 0, 1], [1, 1, 1]], color: '#f0a000' }
         };
-        
         let board = [];
         let currentPiece = null;
         let nextPiece = null;
@@ -107,24 +102,20 @@
         let dropTime = 0;
         let dropInterval = 1000;
         let paused = false;
-
         let ghostPiece = null;
         let ghostEnabled = false;
         let keySequence = [];
         const activationCode = 'asdf';
-        
         function initBoard() {
             board = [];
             for (let y = 0; y < BOARD_HEIGHT; y++) {
                 board[y] = new Array(BOARD_WIDTH).fill(0);
             }
         }
-        
         function createPiece() {
             const pieces = Object.keys(TETROMINOS);
             const randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
             const tetromino = TETROMINOS[randomPiece];
-            
             return {
                 shape: tetromino.shape,
                 color: tetromino.color,
@@ -132,7 +123,6 @@
                 y: 0
             };
         }
-        
         function drawBlock(ctx, x, y, color) {
             ctx.fillStyle = color;
             ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -140,7 +130,6 @@
             ctx.lineWidth = 1;
             ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
         }
-        
         function drawBoard() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let y = 0; y < BOARD_HEIGHT; y++) {
@@ -157,14 +146,12 @@
                 drawPiece(ctx, currentPiece);
             }
         }
-
         function hexToRgba(hex, alpha) {
             const r = parseInt(hex.slice(1, 3), 16);
             const g = parseInt(hex.slice(3, 5), 16);
             const b = parseInt(hex.slice(5, 7), 16);
             return `rgba(${r}, ${g}, ${b}, ${alpha})`;
         }
-
         function drawGhostPiece(ctx, piece) {
             const ghostColor = hexToRgba(piece.color, 0.2);
             piece.shape.forEach((row, y) => {
@@ -176,7 +163,6 @@
                 });
             });
         }
-        
         function drawPiece(ctx, piece) {
             piece.shape.forEach((row, y) => {
                 row.forEach((value, x) => {
@@ -186,14 +172,12 @@
                 });
             });
         }
-        
         function drawNextPiece() {
             nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
             if (nextPiece) {
                 const pieceSize = 20;
                 const offsetX = (nextCanvas.width - nextPiece.shape[0].length * pieceSize) / 2;
                 const offsetY = (nextCanvas.height - nextPiece.shape.length * pieceSize) / 2;
-                
                 nextPiece.shape.forEach((row, y) => {
                     row.forEach((value, x) => {
                         if (value) {
@@ -206,12 +190,10 @@
                 });
             }
         }
-        
         function isValidMove(piece, dx, dy, rotation = null) {
             const shape = rotation || piece.shape;
             const newX = piece.x + dx;
             const newY = piece.y + dy;
-            
             for (let y = 0; y < shape.length; y++) {
                 for (let x = 0; x < shape[y].length; x++) {
                     if (shape[y][x]) {
@@ -225,7 +207,6 @@
             }
             return true;
         }
-
         function updateGhostPiece() {
             if (!currentPiece) {
                 ghostPiece = null;
@@ -236,7 +217,6 @@
                 ghostPiece.y++;
             }
         }
-        
         function rotatePiece(piece) {
             const rotated = [];
             const shape = piece.shape;
@@ -248,7 +228,6 @@
             }
             return rotated;
         }
-        
         function placePiece() {
             currentPiece.shape.forEach((row, y) => {
                 row.forEach((value, x) => {
@@ -260,12 +239,11 @@
             clearLines();
             currentPiece = nextPiece;
             nextPiece = createPiece();
-            updateGhostPiece(); 
+            updateGhostPiece();
             if (!isValidMove(currentPiece, 0, 0)) {
                 gameOver();
             }
         }
-        
         function clearLines() {
             let linesCleared = 0;
             for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
@@ -284,24 +262,20 @@
                 updateScore();
             }
         }
-        
         function updateScore() {
             document.getElementById('score').textContent = score;
             document.getElementById('level').textContent = level;
             document.getElementById('lines').textContent = lines;
         }
-        
         async function gameOver() {
             gameRunning = false;
             document.getElementById('finalScore').textContent = score;
             document.getElementById('gameOver').style.display = 'block';
-
             const name = prompt("게임 오버! 랭킹에 등록할 이름을 입력하세요:", "플레이어");
             if (name && score > 0) {
                 await saveScore(name, score);
             }
         }
-
         async function saveScore(name, score) {
             try {
                 await db.collection("scores").add({
@@ -310,28 +284,24 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 console.log("점수 저장 성공!");
-                await displayLeaderboard(); 
+                await displayLeaderboard();
             } catch (error) {
                 console.error("점수 저장 실패: ", error);
             }
         }
-
         async function displayLeaderboard() {
             const list = document.getElementById('leaderboardList');
-            list.innerHTML = "<li>불러오는 중...</li>"; 
-
+            list.innerHTML = "<li>불러오는 중...</li>";
             try {
                 const snapshot = await db.collection("scores")
                     .orderBy("score", "desc")
                     .limit(5)
                     .get();
-                
-                list.innerHTML = ""; 
+                list.innerHTML = "";
                 if (snapshot.empty) {
                     list.innerHTML = "<li>등록된 점수가 없습니다.</li>";
                     return;
                 }
-                
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const entry = document.createElement('li');
@@ -343,7 +313,6 @@
                 list.innerHTML = "<li>리더보드를 불러올 수 없습니다.</li>";
             }
         }
-        
         function restartGame() {
             document.getElementById('gameOver').style.display = 'none';
             score = 0;
@@ -353,30 +322,26 @@
             updateScore();
             startGame();
         }
-        
         function startGame() {
             initBoard();
             currentPiece = createPiece();
             nextPiece = createPiece();
-            updateGhostPiece(); 
+            updateGhostPiece();
             gameRunning = true;
             paused = false;
             dropTime = Date.now();
             gameLoop();
         }
-        
         function gameLoop() {
             if (!gameRunning) return;
             if (paused) {
                 requestAnimationFrame(gameLoop);
                 return;
             }
-            
             update();
             draw();
             requestAnimationFrame(gameLoop);
         }
-        
         function update() {
             const now = Date.now();
             if (now - dropTime > dropInterval) {
@@ -388,12 +353,10 @@
                 dropTime = now;
             }
         }
-        
         function draw() {
             drawBoard();
             drawNextPiece();
         }
-        
         document.addEventListener('keydown', (e) => {
             keySequence.push(e.key.toLowerCase());
             keySequence = keySequence.slice(-activationCode.length);
@@ -401,20 +364,16 @@
                 ghostEnabled = !ghostEnabled;
                 updateGhostPiece();
             }
-
             if (!gameRunning) return;
-
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-                e.preventDefault(); 
+                e.preventDefault();
             }
             if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
                 paused = !paused;
-                if (!paused) { dropTime = Date.now(); } 
+                if (!paused) { dropTime = Date.now(); }
                 return;
             }
-
-            if(paused) return;
-            
+            if (paused) return;
             switch (e.key) {
                 case 'ArrowLeft':
                     if (isValidMove(currentPiece, -1, 0)) {
@@ -456,7 +415,6 @@
                     return;
             }
         });
-        
         startGame();
         displayLeaderboard();
     </script>
