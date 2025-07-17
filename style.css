@@ -1,0 +1,168 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* --- Game Page Styles --- */
+.game-container {
+    display: flex;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    align-items: flex-start;
+}
+
+.game-board {
+    position: relative;
+}
+
+canvas#gameCanvas {
+    border: 2px solid #fff;
+    background: #000;
+    border-radius: 5px;
+}
+
+.info-panel {
+    min-width: 200px;
+}
+
+.score-board, .next-piece, .controls, .leaderboard {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leaderboard h3 { margin-top: 0; }
+.leaderboard ol { padding-left: 20px; margin: 0; }
+.leaderboard li { margin: 5px 0; display: flex; justify-content: space-between; }
+.leaderboard li span:first-child { font-weight: bold; }
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.next-piece { text-align: center; }
+.next-canvas {
+    border: 1px solid #fff;
+    background: #000;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.controls h3 { margin-top: 0; color: #fff; }
+.controls p { margin: 5px 0; color: #ccc; font-size: 14px; }
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+}
+
+.restart-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.restart-btn:hover { background: #45a049; }
+
+.view-all-btn {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+.view-all-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Full Leaderboard Page Styles --- */
+.leaderboard-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.leaderboard-container h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.leaderboard-container ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.leaderboard-container li {
+    background: rgba(0, 0, 0, 0.2);
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+}
+
+.leaderboard-container .rank {
+    font-weight: bold;
+    min-width: 40px;
+    font-style: italic;
+    color: #ddd;
+}
+
+.leaderboard-container .name {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.leaderboard-container .score {
+    font-weight: bold;
+    color: #f0f000;
+}
+
+.back-btn {
+    margin-top: 25px;
+}
